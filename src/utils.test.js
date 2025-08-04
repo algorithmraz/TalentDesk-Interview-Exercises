@@ -1,4 +1,4 @@
-import { calculateResult } from "./utils"; // Adjust import path as needed
+import { calculateResult } from "./utils/utils"; // Adjust import path as needed
 
 describe("calculateResult Function Tests", () => {
   // Helper function to validate result structure
