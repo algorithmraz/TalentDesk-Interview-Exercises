@@ -1,14 +1,15 @@
 import { ALGORITHMS } from "../constants";
+import { runAlgoWithPerfMetrics } from "./performance-metrics";
 import {
   detectSumsMemoryEfficient,
   detectSumsTimeEfficient,
 } from "./sum-algorithms";
 
 /**
- * Sum Detection Algorithms
+ * Sum Detection Algorithms & Performance Tools
  *
  * This module provides optimized algorithms for detecting sum combinations
- * in arrays where A[pA] + A[pB] === A[sum]
+ * in arrays where A[pA] + A[pB] === A[sum], along with performance analysis tools.
  */
 
 /**
@@ -16,6 +17,7 @@ import {
  * @property {number[]} input - Parsed input array
  * @property {SumCombination[]} result - Detected combinations
  * @property {string|null} error - Error message if any
+ * @property {PerformanceMetrics|null} performanceMetrics - Performance data
  * @property {string} algorithmUsed - Algorithm selected
  */
 
@@ -35,6 +37,7 @@ export function calculateResult(input, algorithm) {
       input: [],
       result: [],
       error: "Please enter a valid input string (comma-separated numbers)",
+      performanceMetrics: null,
       algorithmUsed: algorithm,
     };
   }
@@ -74,12 +77,18 @@ export function calculateResult(input, algorithm) {
     const selectedAlgorithm =
       algorithms[algorithm] || algorithms["time-efficient"];
 
-    const result = selectedAlgorithm.fn(parsedNumArray);
+    // Performance analysis and execution
+    const { result, ...metrics } = runAlgoWithPerfMetrics(
+      parsedNumArray,
+      selectedAlgorithm.name,
+      selectedAlgorithm.fn
+    );
 
     return {
       input: parsedNumArray,
       result,
       error,
+      performanceMetrics: metrics,
       algorithmUsed: algorithm,
     };
   } catch (err) {
@@ -89,6 +98,7 @@ export function calculateResult(input, algorithm) {
       input: parsedNumArray,
       result: [],
       error,
+      performanceMetrics: null,
       algorithmUsed: algorithm,
     };
   }
